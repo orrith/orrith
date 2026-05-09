@@ -304,6 +304,24 @@ export default {
 
 ---
 
+## Security
+
+orrith is a **personal local-first tool**. It binds to `127.0.0.1` and does not accept connections from outside your machine. To keep it safe:
+
+- **Don't expose it via ngrok / Tailscale / 0.0.0.0**. Tokens stored as env vars (`GITHUB_TOKEN`, `CLOUDFLARE_API_TOKEN`, `SENTRY_TOKEN`, `STRIPE_SECRET_KEY`) are sent to upstream APIs from your machine. If you tunnel orrith publicly, anyone on the tunnel can hit `/api/metrics` and see service info.
+- **Run `npx orrith` only inside repos you trust.** orrith reads `orrith.config.js` at startup via dynamic import, which means the config file's code runs in your Node process. A malicious config can do anything your shell can. (Same caveat as `eslint.config.js`, `vite.config.ts`, and other JS-config tools.)
+- **Use restricted/scoped tokens** for built-in adapters:
+  - GitHub: PAT with `public_repo` only (or none — public API works at lower rate limits)
+  - Cloudflare: token with **read-only** Workers/D1/R2 scopes
+  - Sentry: scopes `org:read`, `project:read`, `event:read`
+  - Stripe: **Restricted Key** with read access only to Balance / Charges / Subscriptions
+
+## Reporting a vulnerability
+
+Please email security reports privately to `seiya9shimizu@gmail.com` rather than opening a public issue.
+
+---
+
 ## License
 
 [MIT](LICENSE)

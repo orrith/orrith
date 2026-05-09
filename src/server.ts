@@ -25,9 +25,16 @@ const TODOS_DIR = resolveSource(config, 'todosDir')
 const app = express()
 app.use(express.json({ limit: '64kb' }))
 
-// CORS: localhost-only assumption (open for local cross-origin pushes)
-app.use((_req, res, next) => {
-  res.set('Access-Control-Allow-Origin', '*')
+// CORS: only allow http://localhost / 127.0.0.1 (any port). This prevents a
+// public website from reading /api/metrics (which can leak service info via
+// cache) or pushing to /api/preview-url from a browser on the same machine.
+const LOCAL_ORIGIN_RE = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/
+app.use((req, res, next) => {
+  const origin = req.headers.origin
+  if (typeof origin === 'string' && LOCAL_ORIGIN_RE.test(origin)) {
+    res.set('Access-Control-Allow-Origin', origin)
+    res.set('Vary', 'Origin')
+  }
   res.set('Access-Control-Allow-Headers', 'Content-Type')
   res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
   next()
@@ -280,6 +287,14 @@ app.get('/api/git', (_req, res) => {
 let lastPreviewUrl: string | null = null
 
 app.post('/api/preview-url', (req, res) => {
+  // Reject cross-origin POSTs that aren't from localhost — prevents a malicious
+  // public site from forcing every connected SSE client's iframe to load an
+  // attacker-controlled URL.
+  const origin = req.headers.origin
+  if (typeof origin === 'string' && !LOCAL_ORIGIN_RE.test(origin)) {
+    res.status(403).json({ error: 'cross-origin POST not allowed' })
+    return
+  }
   const url = typeof req.body?.url === 'string' ? req.body.url.trim() : ''
   if (!url) {
     res.status(400).json({ error: 'url (string) required in JSON body' })
@@ -404,7 +419,10 @@ app.get('/api/config', (_req, res) => {
 
 app.use(express.static(PUBLIC_DIR))
 
-app.listen(PORT, () => {
+// Bind to loopback only — orrith is a personal local tool, not a network service.
+// Don't expose it via ngrok / Tailscale / 0.0.0.0; tokens in /api/metrics
+// would leak to anyone on the network.
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`🌌 orrith running at http://localhost:${PORT}`)
   console.log(`   preset: ${config.preset}`)
   console.log(`   root:   ${ROOT}`)

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# pre-commit: gitleaks で staged 内の secret を検出
+# 設定: git config core.hooksPath scripts/git-hooks (一度だけ実行)
+#
+# Bypass (緊急用): SKIP_GITLEAKS=1 git commit ...
+#   ※ bypass は github action 側で再検出されるので、最終ライン防御は GA
+set -e
+
+if [ "${SKIP_GITLEAKS:-0}" = "1" ]; then
+  echo "⚠️  SKIP_GITLEAKS=1: secret scan skipped"
+  exit 0
+fi
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "⚠️  gitleaks not installed; run: brew install gitleaks"
+  echo "   (commit allowed but scan skipped)"
+  exit 0
+fi
+
+# --staged: index にある変更だけスキャン
+# --redact: 出力で secret を伏字化
+# --no-banner: 静かに
+gitleaks protect --staged --redact --no-banner --verbose

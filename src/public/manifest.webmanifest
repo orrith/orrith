@@ -1,0 +1,20 @@
+{
+  "name": "orrith",
+  "short_name": "orrith",
+  "description": "個人開発者の HUD ダッシュボード。指標を盤面で回す、自分のための道具。",
+  "display": "standalone",
+  "orientation": "any",
+  "start_url": "/",
+  "scope": "/",
+  "background_color": "#0a0e1a",
+  "theme_color": "#6dd3fa",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"]
+}

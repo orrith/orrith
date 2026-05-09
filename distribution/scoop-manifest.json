@@ -1,0 +1,18 @@
+{
+  "version": "FIXME",
+  "description": "The ops cockpit for solo builders — HUD with multi-source metrics + 5 aesthetic presets.",
+  "homepage": "https://orrith.dev",
+  "license": "MIT",
+  "depends": "nodejs",
+  "url": "https://registry.npmjs.org/orrith/-/orrith-FIXME.tgz",
+  "hash": "FIXME",
+  "extract_dir": "package",
+  "bin": "bin/orrith.js",
+  "checkver": {
+    "url": "https://registry.npmjs.org/orrith",
+    "jsonpath": "$['dist-tags'].latest"
+  },
+  "autoupdate": {
+    "url": "https://registry.npmjs.org/orrith/-/orrith-$version.tgz"
+  }
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#6dd3fa" />
+<title>orrith</title>
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/svg+xml" href="/icon.svg" />
+<link rel="apple-touch-icon" href="/icon.svg" />
+<link rel="stylesheet" href="/style.css">
+</head>
+<body data-preset="pixel">
+<div id="toasts" class="toast-container" aria-live="polite"></div>
+<div class="hud">
+  <header class="hud-header">
+    <div class="hud-title-block">
+      <span class="hud-bracket">[</span>
+      <span class="hud-title">orrith</span>
+      <span class="hud-bracket">]</span>
+      <span class="hud-sub">// personal ops dashboard</span>
+    </div>
+    <div class="hud-meta">
+      <span class="hud-time" id="time">--:--</span>
+      <span class="hud-status" id="status">● ONLINE</span>
+    </div>
+  </header>
+
+  <nav class="hud-tabs" id="hud-tabs" role="tablist">
+    <button type="button" class="hud-tab" data-tab="roadmap">ROADMAP</button>
+    <button type="button" class="hud-tab" data-tab="metrics">METRICS</button>
+    <button type="button" class="hud-tab" data-tab="status">STATUS</button>
+    <button type="button" class="hud-tab" data-tab="preview">PREVIEW</button>
+  </nav>
+
+  <main class="hud-grid">
+    <section class="panel panel-roadmap" data-tab="roadmap">
+      <h2 class="panel-title">▾ ROADMAP // active projects</h2>
+      <div class="panel-body" id="roadmap"></div>
+    </section>
+
+    <section class="panel panel-metrics" data-tab="metrics">
+      <h2 class="panel-title">▾ METRICS // external data</h2>
+      <div class="panel-body" id="metrics"></div>
+    </section>
+
+    <section class="panel panel-status" data-tab="status">
+      <h2 class="panel-title">▾ STATUS // git + system</h2>
+      <div class="panel-body" id="status-body"></div>
+    </section>
+
+    <section class="panel panel-preview" data-tab="preview">
+      <h2 class="panel-title">▾ PREVIEW // internal browser</h2>
+      <div class="preview-bar">
+        <form class="preview-url-form" id="preview-url-form">
+          <span class="preview-prompt">URL ▸</span>
+          <input type="text" class="preview-url" id="preview-url" placeholder="http://localhost:3000/" autocomplete="off" spellcheck="false" />
+          <button type="submit" class="preview-go">GO</button>
+        </form>
+        <div class="preview-presets" id="preview-presets">
+          <button type="button" class="preview-chip preview-chip-action" data-action="reload">↻ reload</button>
+          <button type="button" class="preview-chip preview-chip-action" data-action="open">⤓ external</button>
+        </div>
+        <div class="preview-viewports" id="preview-viewports">
+          <span class="preview-vp-label">VIEW</span>
+          <button type="button" class="preview-vp" data-viewport="390">📱 390</button>
+          <button type="button" class="preview-vp" data-viewport="768">📲 768</button>
+          <button type="button" class="preview-vp preview-vp-active" data-viewport="0">⛶ full</button>
+        </div>
+      </div>
+      <div class="preview-frame-wrap">
+        <iframe id="preview-frame" class="preview-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals" referrerpolicy="no-referrer"></iframe>
+        <div class="preview-empty" id="preview-empty">Enter a URL above, or use the action buttons.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hud-footer">
+    <span class="footer-tag">orrith v0.0.1</span>
+    <label class="footer-preset">
+      preset:
+      <select id="preset-select" class="footer-preset-select">
+        <option value="pixel">Pixel</option>
+        <option value="visor">Visor</option>
+        <option value="monolith">Monolith</option>
+        <option value="doodle">Doodle</option>
+        <option value="minimal">Minimal</option>
+      </select>
+    </label>
+    <a href="https://github.com/orrith/orrith" target="_blank" rel="noopener" class="footer-star">★ Star on GitHub</a>
+    <span class="footer-refresh">auto-refresh: 60s</span>
+  </footer>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

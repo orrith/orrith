@@ -1,0 +1,48 @@
+{
+  "name": "orrith",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "The ops cockpit for solo builders. A HUD with multi-source metrics + ops markdown + 5 aesthetic presets.",
+  "keywords": [
+    "dashboard",
+    "hud",
+    "indie",
+    "indiehackers",
+    "dotfiles",
+    "personal-ops",
+    "monitoring"
+  ],
+  "license": "MIT",
+  "author": "Seiya Shimizu",
+  "homepage": "https://orrith.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orrith/orrith"
+  },
+  "bin": {
+    "orrith": "./bin/orrith.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "presets",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node --watch --watch-path=src --experimental-strip-types --env-file-if-exists=.env src/server.ts",
+    "start:no-watch": "node --experimental-strip-types --env-file-if-exists=.env src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3"
+  }
+}

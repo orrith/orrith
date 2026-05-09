@@ -10,6 +10,8 @@ Bring your STATE / ROADMAP / TODO together with data sources like GitHub / Cloud
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Star on GitHub](https://img.shields.io/github/stars/orrith/orrith?style=social)](https://github.com/orrith/orrith)
 
+> ⚠️ **Pre-release · WIP** — Not yet published to npm. `npx orrith` will not work until the first npm release. The code is here to read; install instructions become real after launch.
+
 ![5 preset demo](demo/orrith-presets.gif)
 
 ```bash

@@ -1,0 +1,42 @@
+name: Socket Security block
+
+on:
+  check_run:
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  block-on-socket-failure:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.check_run.name == 'Socket Security: Pull Request Alerts' &&
+      github.event.check_run.conclusion == 'failure' &&
+      github.event.check_run.pull_requests[0] != null
+    steps:
+      - name: Label PR + comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUM: ${{ github.event.check_run.pull_requests[0].number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr edit "$PR_NUM" --repo "$REPO" --add-label "socket-blocked" || \
+            gh label create "socket-blocked" --repo "$REPO" --color "B60205" --description "Socket Security detected risk — manual review required" && \
+            gh pr edit "$PR_NUM" --repo "$REPO" --add-label "socket-blocked"
+          gh pr comment "$PR_NUM" --repo "$REPO" --body "🛡️ Socket Security flagged risks in this PR.
+
+Auto-merge has been blocked (the \`Socket Security: Pull Request Alerts\` status check is required on \`main\`).
+
+**Next step**: review the Socket bot's comment above. If risks are acceptable, run \`@SocketSecurity ignore <pkg>@<ver>\` per alert, or mark as 'Acceptable risk' in the Socket dashboard."
+
+      - name: Auto-close Dependabot PR (safe to reopen on next scheduled run)
+        if: github.event.check_run.pull_requests[0].user.login == 'dependabot[bot]'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUM: ${{ github.event.check_run.pull_requests[0].number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr close "$PR_NUM" --repo "$REPO" --comment "Auto-closed by Socket-block workflow (Dependabot PR with Socket Security failure). Will be recreated on next weekly Dependabot run if the issue persists upstream."
